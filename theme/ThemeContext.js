@@ -21,6 +21,8 @@ export const ThemeProvider = ({ children }) => {
         placeholder: '#6c757d',
         headerBg: '#ffffff',
         cardBg: '#ffffff',
+        sectionBg: '#f0f0f0',      // Added
+        sectionText: '#333333'     // Added
       },
       dark: {
         background: '#1a1a1a',
@@ -31,6 +33,8 @@ export const ThemeProvider = ({ children }) => {
         placeholder: '#868e96',
         headerBg: '#121212',
         cardBg: '#2d2d2d',
+        sectionBg: '#2a2a2a',      // Added
+        sectionText: '#ffffff'     // Added
       }
     }
   };
