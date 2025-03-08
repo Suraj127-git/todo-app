@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { View, FlatList, TextInput, StyleSheet, Animated, Easing, TouchableOpacity } from 'react-native';
 import { supabase } from '../lib/supabase';
 import TodoItem from '../components/TodoItem';
-import TodoWidget from '../widgets/TodoWidget';
 import { Feather } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,44 +14,21 @@ export default function HomeScreen() {
   const slideAnim = useState(new Animated.Value(300))[0];
   const { colors, isDark } = useTheme();
 
-  const updateHomeScreenWidget = async () => {
-    try {
-      const { data } = await supabase
-        .from('todos')
-        .select('*')
-        .order('created_at', { ascending: false });
-  
-      await AsyncStorage.setItem('widgetTodos', JSON.stringify(data));
-      await updateWidget({
-        widgetName: 'TodoWidget',
-        renderWidget: () => (
-          <TodoWidget />
-        ),
-      });
-    } catch (error) {
-      console.error('Error updating widget:', error);
-    }
-  };
-
   useEffect(() => {
-    const initialize = async () => {
-      await fetchTodos();
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 800,
-          easing: Easing.out(Easing.exp),
-          useNativeDriver: true,
-        }),
-      ]).start();
-      await updateHomeScreenWidget(); // Initial widget update
-    };
-    initialize();
+    fetchTodos();
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 800,
+        easing: Easing.out(Easing.exp),
+        useNativeDriver: true,
+      }),
+    ]).start();
   }, []);
 
   async function fetchTodos() {
@@ -63,7 +39,6 @@ export default function HomeScreen() {
 
     if (error) throw error;
     setTodos(data);
-    await updateHomeScreenWidget(); // Update widget after fetch
   }
 
   async function addTodo() {
@@ -75,8 +50,7 @@ export default function HomeScreen() {
 
     if (error) throw error;
     setNewTask('');
-    await fetchTodos(); // Wait for fetch before widget update
-    await updateHomeScreenWidget();
+    fetchTodos();
   }
 
   async function toggleTodo(todo) {
@@ -91,7 +65,6 @@ export default function HomeScreen() {
         item.id === todo.id ? { ...item, is_complete: !item.is_complete } : item
       )
     );
-    await updateHomeScreenWidget(); // Update widget after toggle
   }
 
   async function deleteTodo(todo) {
@@ -102,7 +75,6 @@ export default function HomeScreen() {
 
     if (error) throw error;
     setTodos((prevTodos) => prevTodos.filter((item) => item.id !== todo.id));
-    await updateHomeScreenWidget(); // Update widget after delete
   }
 
   const renderRightActions = (progress, dragX) => {
