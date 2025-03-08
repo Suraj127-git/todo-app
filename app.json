@@ -24,15 +24,15 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.yourdomain.todoapp",
+      "package": "com.surajshettyexpo.remindernotes",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundImage": "./assets/adaptive-background.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [],
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "newArchEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -42,11 +42,27 @@
         "expo-build-properties",
         {
           "android": {
-            "minSdkVersion": 24, 
+            "minSdkVersion": 24,
             "compileSdkVersion": 34,
             "targetSdkVersion": 34,
             "buildToolsVersion": "34.0.0"
           }
+        }
+      ],
+      [
+        "@config-plugins/react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "TodoWidget",
+              "label": "Todo Widget",
+              "minWidth": "200dp",
+              "minHeight": "100dp",
+              "updatePeriodMillis": 1800000,
+              "previewImage": "./assets/widget-preview.png",
+              "targets": ["android"]
+            }
+          ]
         }
       ]
     ],
